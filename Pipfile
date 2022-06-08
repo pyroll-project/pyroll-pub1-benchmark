@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pyroll = "^1.0.0"
+pyroll-integral-thermal = "^1.0.0"
+pyroll-freiberg-flow-stress = "^1.0.0"
+pyroll-hensel-power-and-labour = "^1.0.0"
+pyroll-wusatowski-spreading = "^1.0.0"
+pyroll-sparling-spreading = "^1.0.0"
+pyroll-hill-spreading = "^1.0.0"
+pyroll-sander-spreading = "^1.0.0"
+pyroll-marini-spreading = "^1.0.0"
+pyroll-roux-spreading = "^1.0.0"
+pyroll-lendl-equivalent-method = "^1.0.0"
+pyroll-zouhar-contact = "^1.0.0"
+pyroll-hitchcock-roll-flattening = "^1.0.0"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
