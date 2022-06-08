@@ -1,0 +1,34 @@
+plugins: # list full qualified names of plugins to load (as they were importable in real python code)
+  - pyroll.freiberg_flow_stress
+  - pyroll.integral_thermal
+  - pyroll.zouhar_contact
+  - pyroll.hitchcock_roll_flattening
+  - pyroll.lendl_equivalent_method
+
+logging: # configuration for the logging standard library package
+  version: 1
+  formatters:
+    console:
+      format: '[%(levelname)s] %(name)s: %(message)s'
+    file:
+      format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      level: INFO
+      formatter: console
+      stream: ext://sys.stdout
+    file:
+      class: logging.FileHandler
+      level: INFO
+      formatter: file
+      filename: pyroll.log
+
+  root:
+    level: INFO
+    handlers: [ console, file ]
+
+  loggers:
+    matplotlib:
+      level: ERROR
