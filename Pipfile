@@ -4,21 +4,22 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyroll = "^1.0.0"
-pyroll-integral-thermal = "^1.0.0"
-pyroll-freiberg-flow-stress = "^1.0.0"
-pyroll-hensel-power-and-labour = "^1.0.0"
-pyroll-wusatowski-spreading = "^1.0.0"
-pyroll-sparling-spreading = "^1.0.0"
-pyroll-hill-spreading = "^1.0.0"
-pyroll-sander-spreading = "^1.0.0"
-pyroll-marini-spreading = "^1.0.0"
-pyroll-roux-spreading = "^1.0.0"
-pyroll-lendl-equivalent-method = "^1.0.0"
-pyroll-zouhar-contact = "^1.0.0"
-pyroll-hitchcock-roll-flattening = "^1.0.0"
+pyroll = "== 1.*"
+pyroll-integral-thermal = "== 1.*"
+pyroll-freiberg-flow-stress = "== 1.*"
+pyroll-hensel-power-and-labour = "== 1.*"
+pyroll-wusatowski-spreading = "== 1.*"
+pyroll-sparling-spreading = "== 1.*"
+pyroll-hill-spreading = "== 1.*"
+pyroll-sander-spreading = "== 1.*"
+pyroll-marini-spreading = "== 1.*"
+pyroll-roux-spreading = "== 1.*"
+pyroll-lendl-equivalent-method = "== 1.*"
+pyroll-zouhar-contact = "== 1.*"
+pyroll-hitchcock-roll-flattening = "== 1.*"
 
 [dev-packages]
+pytask = "== 0.2.*"
 
 [requires]
 python_version = "3.10"
