@@ -1,17 +1,14 @@
 import subprocess
-from pathlib import Path
-
 import pytask
 
-from config import PLUGIN_SETS
+from config import PLUGIN_SETS, ROOT_DIR
 
-THIS_DIR = Path(__file__).parent
-INPUT = THIS_DIR / "input.py"
-CONFIG = THIS_DIR / "config.yaml"
+INPUT = ROOT_DIR / "input.py"
+CONFIG = ROOT_DIR / "config.yaml"
 
 for ps in PLUGIN_SETS:
     name = "/".join(ps)
-    working_dir = THIS_DIR / "pyroll" / name
+    working_dir = ROOT_DIR / "pyroll" / name
 
 
     @pytask.mark.task(id=name)
