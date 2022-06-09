@@ -16,9 +16,9 @@ Just run the command `pipenv run pytask` in the root directory of this repositor
 generation and
 analysis.
 
-## The Configuration File `config.py`
+## The Configuration File `task_config.py`
 
-The `PLUGINS` dict in the config specifies the set of plugins, grouped by the type of model they provide.
+The `PLUGINS` dict in the config script specifies the set of plugins, grouped by the type of model they provide.
 In the provided configuration currently 3 types of models are specified:
 
 1. Models for roll force and torque
@@ -71,6 +71,5 @@ The multiplicity of curves for eac model arises from varying the other models ap
 distinguished here.
 
 ![Roll Torque Comparison of Force Models](torque-force_model.png)
-
 
 

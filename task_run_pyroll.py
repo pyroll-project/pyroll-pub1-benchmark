@@ -1,7 +1,7 @@
 import subprocess
 import pytask
 
-from config import PLUGIN_SETS, ROOT_DIR, pyroll_model_key
+from task_config import PLUGIN_SETS, ROOT_DIR, pyroll_model_key
 
 INPUT = ROOT_DIR / "input.py"
 CONFIG = ROOT_DIR / "config.yaml"

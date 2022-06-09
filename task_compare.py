@@ -3,7 +3,7 @@ import pytask
 from matplotlib import pyplot as plt
 from matplotlib.lines import Line2D
 
-from config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_short, pyroll_model_key
+from task_config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_short, pyroll_model_key
 
 
 @pytask.mark.depends_on([

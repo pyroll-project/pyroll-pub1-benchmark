@@ -1,7 +1,10 @@
 import itertools
+import sys
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent
+
+sys.path.append(ROOT_DIR)
 
 PLUGINS: dict[str, list[str]] = {
     "force_model": [
