@@ -19,8 +19,11 @@ pyroll-lendl-equivalent-method = "== 1.*"
 pyroll-zouhar-contact = "== 1.*"
 pyroll-hitchcock-roll-flattening = "== 1.*"
 
-[dev-packages]
 pytask = "== 0.2.*"
+matplotlib = "== 3.5.*"
+pandas = "== 1.4.*"
+
+[dev-packages]
 
 [requires]
 python_version = "3.10"

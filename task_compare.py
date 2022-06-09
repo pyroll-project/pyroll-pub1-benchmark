@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import pytask
 from matplotlib import pyplot as plt
