@@ -1,13 +1,13 @@
 import subprocess
 import pytask
 
-from config import PLUGIN_SETS, ROOT_DIR
+from config import PLUGIN_SETS, ROOT_DIR, pyroll_subfolder
 
 INPUT = ROOT_DIR / "input.py"
 CONFIG = ROOT_DIR / "config.yaml"
 
 for ps in PLUGIN_SETS:
-    name = "/".join(ps)
+    name = pyroll_subfolder(ps)
     working_dir = ROOT_DIR / "pyroll" / name
 
 
@@ -21,7 +21,7 @@ for ps in PLUGIN_SETS:
             [
                 "pyroll",
                 "-c", CONFIG,
-                *[e for p in plugin_set for e in ("-p", f"pyroll.{p}")],
+                *[e for p in plugin_set for e in ("-p", f"pyroll.{p}") if p],
                 "input-py", "-f", INPUT,
                 "solve",
                 "export",

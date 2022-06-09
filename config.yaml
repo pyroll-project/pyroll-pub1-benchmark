@@ -3,7 +3,6 @@ plugins: # list full qualified names of plugins to load (as they were importable
   - pyroll.integral_thermal
   - pyroll.zouhar_contact
   - pyroll.hitchcock_roll_flattening
-  - pyroll.lendl_equivalent_method
 
 logging: # configuration for the logging standard library package
   version: 1

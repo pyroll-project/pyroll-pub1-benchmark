@@ -1,8 +1,10 @@
+import numpy as np
 import pandas as pd
 import pytask
 from matplotlib import pyplot as plt
+from matplotlib.lines import Line2D
 
-from config import PLUGIN_SETS, ROOT_DIR
+from config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_short, pyroll_subfolder
 
 
 @pytask.mark.depends_on([
@@ -10,7 +12,7 @@ from config import PLUGIN_SETS, ROOT_DIR
     ROOT_DIR / "measure" / "data2.csv",
     ROOT_DIR / "wicon" / "data.csv",
     *[
-        ROOT_DIR / "pyroll" / "/".join(ps) / "export.csv"
+        ROOT_DIR / "pyroll" / pyroll_subfolder(ps) / "export.csv"
         for ps in PLUGIN_SETS
     ]
 ])
@@ -21,7 +23,7 @@ def task_generate_data():
     wicon = pd.read_csv(ROOT_DIR / "wicon" / "data.csv", index_col=0)
 
     pyroll = {
-        "/".join(ps): pd.read_csv(ROOT_DIR / "pyroll" / "/".join(ps) / "export.csv", index_col=0)
+        "/".join(ps): pd.read_csv(ROOT_DIR / "pyroll" / pyroll_subfolder(ps) / "export.csv", index_col=0)
         for ps in PLUGIN_SETS
     }
 
@@ -52,31 +54,98 @@ def task_generate_data():
     torque.to_csv(ROOT_DIR / "torque.csv")
 
 
-@pytask.mark.depends_on(ROOT_DIR / "torque.csv")
-def task_plot_torque():
-    df = pd.read_csv(ROOT_DIR / "torque.csv", index_col=0)
+for key, label in [
+    ("temperature", r"Temperature $T$ in $\mathrm{K}$"),
+    ("torque", r"Roll Torque $M$ in $\mathrm{Nm}$"),
+]:
+    @pytask.mark.task(id=key)
+    @pytask.mark.depends_on(ROOT_DIR / f"{key}.csv")
+    @pytask.mark.produces([
+        ROOT_DIR / f"{key}.pdf",
+        ROOT_DIR / f"{key}.png",
+        ROOT_DIR / f"{key}.svg"
+    ])
+    def task_plot(data_key=key, yaxis_label=label):
+        df = pd.read_csv(ROOT_DIR / f"{data_key}.csv", index_col=0)
 
-    plt.plot(df["measure1"].dropna(), c="gray")
-    plt.plot(df["measure2"].dropna(), c="gray")
-    plt.plot(df["wicon"].dropna(), c="black")
+        fig: plt.Figure = plt.figure(figsize=(9, 8))
+        grid = fig.add_gridspec(3, 1, height_ratios=[1, 0.5, 0.001])
+        ax: plt.Axes = fig.add_subplot(grid[0])
 
-    for ps in PLUGIN_SETS:
-        plt.plot(df["/".join(ps)].dropna())
+        ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray")
+        ax.plot(df["measure2"].dropna(), label="Exp. Set 2", c="gray", ls="--")
+        ax.plot(df["wicon"].dropna(), label="WICON", c="black")
 
-    plt.savefig("torque.pdf")
-    plt.close()
+        for ps in PLUGIN_SETS:
+            ax.plot(df["/".join(ps)].dropna(), label="PyRoll " + "/".join(pretty_name_short(p) for p in ps))
 
+        fig.legend(loc="lower center", bbox_to_anchor=(0.5, 0.001), ncol=3, frameon=True)
 
-@pytask.mark.depends_on(ROOT_DIR / "temperature.csv")
-def task_plot_temperature():
-    df = pd.read_csv(ROOT_DIR / "temperature.csv", index_col=0)
+        ax.set_xlabel("Roll Pass")
+        ax.set_ylabel(yaxis_label)
 
-    plt.plot(df["measure1"].dropna(), c="gray")
-    plt.plot(df["measure2"].dropna(), c="gray")
-    plt.plot(df["wicon"].dropna(), c="black")
+        ax.set_xticks(range(0, len(df) + 1, 2))
+        ax.set_xticklabels(range(0, len(df) // 2 + 1))
 
-    for ps in PLUGIN_SETS:
-        plt.plot(df["/".join(ps)].dropna())
+        fig.set_constrained_layout(True)
 
-    plt.savefig("temperature.pdf")
-    plt.close()
+        fig.savefig(ROOT_DIR / f"{data_key}.pdf")
+        fig.savefig(ROOT_DIR / f"{data_key}.png", dpi=600)
+        fig.savefig(ROOT_DIR / f"{data_key}.svg")
+
+        plt.close(fig)
+
+for key, label in [
+    ("temperature", r"Temperature $T$ in $\mathrm{K}$"),
+    ("torque", r"Roll Torque $M$ in $\mathrm{Nm}$"),
+]:
+    for level_index, level_name in enumerate(PLUGINS.keys()):
+        @pytask.mark.task(id=f"{key}-{level_name}")
+        @pytask.mark.depends_on(ROOT_DIR / f"{key}.csv")
+        @pytask.mark.produces([
+            ROOT_DIR / f"{key}-{level_name}.pdf",
+            ROOT_DIR / f"{key}-{level_name}.png",
+            ROOT_DIR / f"{key}-{level_name}.svg"
+        ])
+        def task_plot(data_key=key, yaxis_label=label, level_name=level_name, level_index=level_index):
+            df = pd.read_csv(ROOT_DIR / f"{data_key}.csv", index_col=0)
+
+            fig: plt.Figure = plt.figure(figsize=(9, 5))
+            grid = fig.add_gridspec(3, 1, height_ratios=[1, 0.1, 0.001])
+            ax: plt.Axes = fig.add_subplot(grid[0])
+
+            exp1 = ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray")
+            exp2 = ax.plot(df["measure2"].dropna(), label="Exp. Set 2", c="gray", ls="--")
+            wicon = ax.plot(df["wicon"].dropna(), label="WICON", c="black")
+
+            for ps in PLUGIN_SETS:
+                ax.plot(
+                    df["/".join(ps)].dropna(),
+                    label="PyRoll " + "/".join(pretty_name_short(p) for p in ps),
+                    c=f"C{PLUGINS[level_name].index(ps[level_index])}"
+                )
+
+            handles = exp1 + exp2 + wicon + [
+                Line2D([], [], c=f"C{i}", label="PyRoll " + pretty_name_short(p))
+                for i, p in enumerate(PLUGINS[level_name])
+            ]
+
+            fig.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 0.001),
+                       ncol=(3 + len(PLUGINS[level_name])),
+                       frameon=True)
+
+            ax.set_title(f"Comparison of {pretty_name(level_name)}s")
+
+            ax.set_xlabel("Roll Pass")
+            ax.set_ylabel(yaxis_label)
+
+            ax.set_xticks(range(0, len(df) + 1, 2))
+            ax.set_xticklabels(range(0, len(df) // 2 + 1))
+
+            fig.set_constrained_layout(True)
+
+            fig.savefig(ROOT_DIR / f"{data_key}-{level_name}.pdf")
+            fig.savefig(ROOT_DIR / f"{data_key}-{level_name}.png", dpi=600)
+            fig.savefig(ROOT_DIR / f"{data_key}-{level_name}.svg")
+
+            plt.close(fig)
