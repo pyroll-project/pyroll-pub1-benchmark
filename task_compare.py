@@ -4,7 +4,7 @@ import pytask
 from matplotlib import pyplot as plt
 from matplotlib.lines import Line2D
 
-from config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_short, pyroll_subfolder
+from config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_short, pyroll_model_key
 
 
 @pytask.mark.depends_on([
@@ -12,7 +12,7 @@ from config import PLUGIN_SETS, ROOT_DIR, PLUGINS, pretty_name, pretty_name_shor
     ROOT_DIR / "measure" / "data2.csv",
     ROOT_DIR / "wicon" / "data.csv",
     *[
-        ROOT_DIR / "pyroll" / pyroll_subfolder(ps) / "export.csv"
+        ROOT_DIR / "pyroll" / pyroll_model_key(ps) / "export.csv"
         for ps in PLUGIN_SETS
     ]
 ])
@@ -23,7 +23,7 @@ def task_generate_data():
     wicon = pd.read_csv(ROOT_DIR / "wicon" / "data.csv", index_col=0)
 
     pyroll = {
-        "/".join(ps): pd.read_csv(ROOT_DIR / "pyroll" / pyroll_subfolder(ps) / "export.csv", index_col=0)
+        pyroll_model_key(ps): pd.read_csv(ROOT_DIR / "pyroll" / pyroll_model_key(ps) / "export.csv", index_col=0)
         for ps in PLUGIN_SETS
     }
 
@@ -77,7 +77,7 @@ for key, label in [
         ax.plot(df["wicon"].dropna(), label="WICON", c="black")
 
         for ps in PLUGIN_SETS:
-            ax.plot(df["/".join(ps)].dropna(), label="PyRoll " + "/".join(pretty_name_short(p) for p in ps))
+            ax.plot(df[pyroll_model_key(ps)].dropna(), label="PyRoll " + "/".join(pretty_name_short(p) for p in ps))
 
         fig.legend(loc="lower center", bbox_to_anchor=(0.5, 0.001), ncol=3, frameon=True)
 
@@ -120,7 +120,7 @@ for key, label in [
 
             for ps in PLUGIN_SETS:
                 ax.plot(
-                    df["/".join(ps)].dropna(),
+                    df[pyroll_model_key(ps)].dropna(),
                     label="PyRoll " + "/".join(pretty_name_short(p) for p in ps),
                     c=f"C{PLUGINS[level_name].index(ps[level_index])}"
                 )

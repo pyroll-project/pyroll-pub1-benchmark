@@ -1,13 +1,13 @@
 import subprocess
 import pytask
 
-from config import PLUGIN_SETS, ROOT_DIR, pyroll_subfolder
+from config import PLUGIN_SETS, ROOT_DIR, pyroll_model_key
 
 INPUT = ROOT_DIR / "input.py"
 CONFIG = ROOT_DIR / "config.yaml"
 
 for ps in PLUGIN_SETS:
-    name = pyroll_subfolder(ps)
+    name = pyroll_model_key(ps)
     working_dir = ROOT_DIR / "pyroll" / name
 
 

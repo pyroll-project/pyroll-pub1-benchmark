@@ -36,5 +36,5 @@ def pretty_name_short(name: str):
     return name.split("_")[0].title()
 
 
-def pyroll_subfolder(plugin_set: tuple[str]):
+def pyroll_model_key(plugin_set: tuple[str]):
     return "/".join((p if p else "base") for p in plugin_set)
