@@ -2,6 +2,9 @@ import itertools
 import sys
 from pathlib import Path
 
+from matplotlib import cycler, rc
+from matplotlib.cm import get_cmap
+
 ROOT_DIR = Path(__file__).parent
 
 sys.path.append(ROOT_DIR)
@@ -41,3 +44,9 @@ def pretty_name_short(name: str):
 
 def pyroll_model_key(plugin_set: tuple[str]):
     return "/".join((p if p else "base") for p in plugin_set)
+
+
+rc("axes", prop_cycle=(
+    cycler(ls=["-", "--", ":", "-."])
+    * cycler(c=get_cmap("tab10").colors)
+))

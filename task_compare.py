@@ -59,6 +59,7 @@ for key, label in [
 ]:
     @pytask.mark.task(id=key)
     @pytask.mark.depends_on(ROOT_DIR / f"{key}.csv")
+    @pytask.mark.depends_on("task_config.py")
     @pytask.mark.produces([
         ROOT_DIR / f"{key}.pdf",
         ROOT_DIR / f"{key}.png",
@@ -71,13 +72,12 @@ for key, label in [
         grid = fig.add_gridspec(3, 1, height_ratios=[1, 0.5, 0.001])
         ax: plt.Axes = fig.add_subplot(grid[0])
 
-        ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray")
+        ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray", ls="-")
         ax.plot(df["measure2"].dropna(), label="Exp. Set 2", c="gray", ls="--")
-        ax.plot(df["wicon"].dropna(), label="WICON", c="black")
+        ax.plot(df["wicon"].dropna(), label="WICON", c="black", ls="-")
 
         for ps in PLUGIN_SETS:
             ax.plot(df[pyroll_model_key(ps)].dropna(), label="PyRoll " + "/".join(pretty_name_short(p) for p in ps))
-
         fig.legend(loc="lower center", bbox_to_anchor=(0.5, 0.001), ncol=3, frameon=True)
 
         ax.set_xlabel("Roll Pass")
@@ -101,6 +101,7 @@ for key, label in [
     for level_index, level_name in enumerate(PLUGINS.keys()):
         @pytask.mark.task(id=f"{key}-{level_name}")
         @pytask.mark.depends_on(ROOT_DIR / f"{key}.csv")
+        @pytask.mark.depends_on("task_config.py")
         @pytask.mark.produces([
             ROOT_DIR / f"{key}-{level_name}.pdf",
             ROOT_DIR / f"{key}-{level_name}.png",
@@ -113,9 +114,9 @@ for key, label in [
             grid = fig.add_gridspec(3, 1, height_ratios=[1, 0.1, 0.001])
             ax: plt.Axes = fig.add_subplot(grid[0])
 
-            exp1 = ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray")
+            exp1 = ax.plot(df["measure1"].dropna(), label="Exp. Set 1", c="gray", ls="-")
             exp2 = ax.plot(df["measure2"].dropna(), label="Exp. Set 2", c="gray", ls="--")
-            wicon = ax.plot(df["wicon"].dropna(), label="WICON", c="black")
+            wicon = ax.plot(df["wicon"].dropna(), label="WICON", c="black", ls="-")
 
             for ps in PLUGIN_SETS:
                 ax.plot(
