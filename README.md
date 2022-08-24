@@ -6,7 +6,7 @@ Run `pipenv install` to set up the virtual environment.
 
 The aim of this repository is to provide an environment for testing the influence of different model approaches loadable
 as plugins in PyRoll.
-One may edit the [task_config.py](task_config.py) file to specify a two-dimensional matrix of plugins to use.
+One may edit the [task_config.py](pyroll_pub1_benchmark/task_config.py) file to specify a two-dimensional matrix of plugins to use.
 The scripts provided in this repository will execute a PyRoll run with each possible combination of those plugins and
 generate CSV tables as well as plots for comparison of the results with each other and 2 different experimental data
 sets and simulation results obtained from the commercial
@@ -18,7 +18,7 @@ analysis.
 
 ## The Task Configuration File `task_config.py`
 
-The [file](task_config.py) contains several common definitions used in the tasks.
+The [file](pyroll_pub1_benchmark/task_config.py) contains several common definitions used in the tasks.
 
 The `PLUGINS` dict specifies the set of plugins, grouped by the type of model they provide.
 In the provided configuration currently 3 types of models are specified:
@@ -34,9 +34,8 @@ is later displayed with the keyword "base").
 
 ## The PyRoll Input File `input.py`
 
-The [input file](input.py) defines an industrial roll pass sequence starting with two box passes and continuing with
-alternating oval and
-round passes.
+The [input file](pyroll_pub1_benchmark/input.py) defines an industrial roll pass sequence starting with two box passes and continuing with
+alternating oval and round passes.
 See the [documentation](https://pyroll.readthedocs.io/en/latest/) for further information.
 
 ## The PyRoll Configuration File `config.yaml`
@@ -55,14 +54,12 @@ temperatures.
 
 ## Generated Data
 
-The PyRoll runs will generate export and report files in the [`pyroll`](pyroll) directory with subdirectories named
-according to
-the used plugins.
+The PyRoll runs will generate export and report files in the [`pyroll`](pyroll_pub1_benchmark/pyroll)
+directory with subdirectories named according to the used plugins.
 
 These files are read by the analysis scripts and condensed.
-The files [`temperate.csv`](temperature.csv) and [`torque.csv`](torque.csv) will be generated containing a comparison of
-data obtained from measurements,
-WICON and the PyRoll runs.
+The files [`temperate.csv`](pyroll_pub1_benchmark/temperature.csv) and [`torque.csv`](pyroll_pub1_benchmark/torque.csv) 
+will be generated containing a comparison of data obtained from measurements, WICON and the PyRoll runs.
 
 ## Generated Plots
 
@@ -70,17 +67,17 @@ The analysis scripts will generate plots of roll torque and profile temperature 
 approaches from PyRoll as well as the experimental sets and WICON named `torque.*` and `temperature.*`.
 The `*` denotes different file formats.
 
-![Roll Torque](torque.png)
-![Profile Temperature](temperature.png)
+![Roll Torque](pyroll_pub1_benchmark/torque.png)
+![Profile Temperature](pyroll_pub1_benchmark/temperature.png)
 
 The analysis scripts will also create plots which highlight the differences which are effected by varying the respective
 model approach.
 The files are named `torque-<key>.*` and `temperature-<key>.*`, where `<key>` is the placeholder of the keys in
-the `PLUGINS` dict in the [config](#the-configuration-file-configpy).
+the `PLUGINS` dict in the [config](#the-pyroll-configuration-file-configyaml).
 An example is shown below, where the three different force models are distinguished by color.
 The multiplicity of curves for each model arises from varying the other models approaches, but those are not
 distinguished here.
 
-![Roll Torque Comparison of Force Models](torque-force_model.png)
+![Roll Torque Comparison of Force Models](pyroll_pub1_benchmark/torque-force_model.png)
 
 
